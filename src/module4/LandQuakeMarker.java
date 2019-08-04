@@ -33,10 +33,16 @@ public class LandQuakeMarker extends EarthquakeMarker {
 		// and how it is set in the EarthquakeMarker constructor
 		
 		// TODO: Implement this method
+		if (getMagnitude() > 5.0f)
+		    pg.ellipse(x, y, 20, 20);
 		
-	}
+		if (getMagnitude() > 4.0f && getMagnitude() <= 5.0f)
+			pg.ellipse(x, y, 10, 10);
+		
+		if (getMagnitude() <= 4.0f)
+			pg.ellipse(x, y, 5, 5);
 	
-
+	}
 	// Get the country the earthquake is in
 	public String getCountry() {
 		return (String) getProperty("country");
