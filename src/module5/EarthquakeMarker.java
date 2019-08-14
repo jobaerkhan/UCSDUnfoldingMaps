@@ -88,13 +88,25 @@ public abstract class EarthquakeMarker extends CommonMarker
 		pg.popStyle();
 		
 	}
-
+ 
 	/** Show the title of the earthquake if this marker is selected */
 	@Override
 	public void showTitle(PGraphics pg, float x, float y)
 	{
 		// TODO: Implement this method
+		String title = getTitle();
 		
+		
+		pg.pushStyle();
+		
+		pg.fill(255, 204, 229); //color
+		pg.rect(x + 15, y - 9, pg.textWidth(title) +6, 18, 5); //square
+		pg.textSize(12);
+		pg.fill(0, 0, 0);
+		pg.text(title, x + 16, y + 3);
+
+		
+		pg.popStyle();
 	}
 
 	

@@ -1,8 +1,8 @@
 package module5;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import java.util.List;
 import de.fhpotsdam.unfolding.UnfoldingMap;
 import de.fhpotsdam.unfolding.data.Feature;
 import de.fhpotsdam.unfolding.data.GeoJSONReader;
@@ -16,7 +16,6 @@ import de.fhpotsdam.unfolding.providers.MBTilesMapProvider;
 import de.fhpotsdam.unfolding.utils.MapUtils;
 import parsing.ParseFeed;
 import processing.core.PApplet;
-
 /** EarthquakeCityMap
  * An application with an interactive map displaying earthquake data.
  * Author: UC San Diego Intermediate Software Development MOOC team
@@ -135,8 +134,9 @@ public class EarthquakeCityMap extends PApplet {
 			lastSelected = null;
 		
 		}
-		selectMarkerIfHover(quakeMarkers);
 		selectMarkerIfHover(cityMarkers);
+		selectMarkerIfHover(quakeMarkers);
+
 	}
 	
 	// If there is a marker under the cursor, and lastSelected is null 
@@ -146,6 +146,15 @@ public class EarthquakeCityMap extends PApplet {
 	private void selectMarkerIfHover(List<Marker> markers)
 	{
 		// TODO: Implement this method
+		for(Marker m : markers) {
+			//check if a location is inside a marker.
+			if(m.isInside(map , mouseX, mouseY)) {
+				//found a selected marker
+				m.setSelected(true);
+				lastSelected = (CommonMarker) m;
+				return;
+			}
+		}
 	}
 	
 	/** The event handler for mouse clicks
@@ -159,6 +168,85 @@ public class EarthquakeCityMap extends PApplet {
 		// TODO: Implement this method
 		// Hint: You probably want a helper method or two to keep this code
 		// from getting too long/disorganized
+		if (lastClicked != null) {	
+			//set clicked
+			lastClicked.setClicked(false);
+			lastClicked = null;
+			unhideMarkers();
+		
+		}
+		else if (lastClicked == null) {
+			//check which marker is clicked
+			clickCityMarker();
+			clickQuakeMarker();
+		}
+		
+		
+
+	}
+	private void clickQuakeMarker() {
+		if (lastClicked != null) {
+			return;
+		}
+		for(Marker q: quakeMarkers) {
+			if(q.isInside(map, mouseX, mouseY) && !q.isHidden()) {
+				lastClicked = (CommonMarker) q;
+				lastClicked.setClicked(true);
+				
+				for(Marker m: cityMarkers) {
+					if(((EarthquakeMarker) q).threatCircle() < m.getDistanceTo(q.getLocation())) {
+						m.setHidden(true);
+					} 
+				}
+				for(Marker m: quakeMarkers) {
+					if (m != lastClicked) {
+						m.setHidden(true);
+					}
+				}
+				return;
+			}
+		}
+	}
+	private void clickCityMarker() {
+		
+		 if (lastClicked != null) 
+		        return;
+		    for (Marker marker : cityMarkers) 
+		    {
+		        if (!marker.isHidden() &&
+		            marker.isInside(map, mouseX, mouseY) &&
+		            lastClicked == null)
+		        {
+		            lastClicked = (CommonMarker)marker;
+		        }
+		        else {
+		            marker.setHidden(true);
+		        }
+		    }
+//		if (lastClicked != null) {
+//			return;
+//		}
+//		for(Marker cityM: cityMarkers) {
+//			if(cityM.isInside(map, mouseX, mouseY) && !cityM.isHidden()) {
+//				lastClicked = (CommonMarker) cityM;
+//				lastClicked.setClicked(true);
+//				//loop over all merkers and hide some markers
+//				//all earthquakes in their threat circle are displayed
+//				for(Marker m: quakeMarkers) {
+//					if(((EarthquakeMarker) m).threatCircle() < m.getDistanceTo(cityM.getLocation())){
+//						m.setHidden(true);
+//					}
+//				}
+//				for(Marker m: cityMarkers) {
+//					if(m != lastClicked) {
+//						m.setHidden(true);
+//					}
+//				}
+//				return;
+//			}
+//			
+//		}
+		
 	}
 	
 	
